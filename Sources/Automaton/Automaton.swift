@@ -1,6 +1,7 @@
-public struct Automaton {
-    public private(set) var text = "Hello, World!"
+/// Not used yet
+struct Automaton {
+    private(set) var text = "Automaton"
 
-    public init() {
+    init() {
     }
 }
