@@ -4,6 +4,18 @@ Lightweight and easy to use state machine. I have plans to update it as I test i
 
 It might turn out to be opiniated form of state machine as well. The primary function in mind is to use it for application development state management mainly for use in/with view model and for managing navigation states.
 
+Create state and Event
+
+```swift
+enum TrafficLight: Int, State {
+    case red, green, yellow
+    
+    enum Transition: Event {
+        case next
+    }
+}
+```
+
 Initialize state machine using atomic transitions
 
 ```swift
