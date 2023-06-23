@@ -11,7 +11,7 @@ import Foundation
 public protocol StateMachineProtocol {
     associatedtype S
     associatedtype E
-    var didChangeState: ((Result<S, Error>) -> Void)? { get set }
+    var didChangeResult: ((Result<S, Error>) -> Void)? { get set }
     func changeState(for event: E) -> Result<S, Error>
 }
 
@@ -25,7 +25,7 @@ public class StateMachine<S: State, E: Event>: StateMachineProtocol where S.RawV
     var allowedEvents: [S: [E]] = [:]
     var eventProperties: [E: [Transition]] = [:]
     
-    public var didChangeState: ((Result<S, Error>) -> Void)?
+    public var didChangeResult: ((Result<S, Error>) -> Void)?
     
     public init?(currentState: S = S(rawValue: 0)!, transitions: [Transition]) {
         self.currentState = currentState
@@ -75,13 +75,13 @@ public class StateMachine<S: State, E: Event>: StateMachineProtocol where S.RawV
     public func changeState(for event: E) -> Result<S, Error> {
         guard allowedEvents[currentState]!.contains(event) else {
             let error = StateError.impossible("\(currentState) cannot \(event)")
-            didChangeState?(.failure(error))
+            didChangeResult?(.failure(error))
             return .failure(error)
         }
         event.handleSideEffect()
         let finalState = transitions(forEvent: event).first(where: {$0.initialState == currentState})!.finalState
         currentState = finalState
-        didChangeState?(.success(currentState))
+        didChangeResult?(.success(currentState))
         return .success(currentState)
     }
 }
